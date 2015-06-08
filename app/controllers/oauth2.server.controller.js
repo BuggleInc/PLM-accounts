@@ -10,6 +10,7 @@ var authorizationCodes = require('./authorization-codes.server.controller'),
   _ = require('lodash'),
   oauth2orize = require('oauth2orize'),
   passport = require('passport'),
+  login = require('connect-ensure-login'),
   utils = require('../utils/uuid.server.utils');
 
 // create OAuth 2.0 server
@@ -62,7 +63,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
     if (err) {
       return done(err);
     }
-    done(null, code);
+    return done(null, code);
   });
 }));
 
@@ -96,7 +97,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
         if (err) {
           return done(err);
         }
-        done(null, token);
+        return done(null, token);
       });
     });
   });
@@ -104,9 +105,13 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 
 
 exports.authorization = [
-  function (req, res) {
-    //users.requiresLogin(req, res, null);
+  function (req, res, next) {
+    if(req.body !== {}) {
+      req.body = req.query;
+    }
+    next();
   },
+  login.ensureLoggedIn('/#!/signin'),
   server.authorization(function (clientID, redirectURI, done) {
     clients.clientByID(clientID, function (err, client) {
       if (err) {
@@ -120,7 +125,7 @@ exports.authorization = [
     });
   }),
   function (req, res) {
-    res.render('dialog', {
+    res.render('index', {
       transactionID: req.oauth2.transactionID,
       user: req.user,
       client: req.oauth2.client
@@ -136,9 +141,7 @@ exports.authorization = [
 // a response.
 
 exports.decision = [
-  function (req, res) {
-    //users.requiresLogin(req, res, null);
-  },
+  login.ensureLoggedIn('/#!/signin'),
   server.decision()
 ];
 

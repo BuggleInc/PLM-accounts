@@ -4,28 +4,24 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+  Schema = mongoose.Schema;
 
 /**
  * Client Schema
  */
 var ClientSchema = new Schema({
-	name: {
-		type: String,
-		trim: true
+  clientId: {
+    type: String,
+    trim: true
   },
-	clientId: {
-		type: String,
-		trim: true
+  clientSecret: {
+    type: String,
+    trim: true
   },
-	clientSecret: {
-		type: String,
-		trim: true
-	},
   redirectURI: {
-		type: String,
-		trim: true
-	}
+    type: String,
+    trim: true
+  }
 });
 
 mongoose.model('Client', ClientSchema);
