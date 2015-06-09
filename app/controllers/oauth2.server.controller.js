@@ -119,8 +119,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 }));
 
 passport.use(new BasicStrategy(
-  function(username, password, done) {
-    clients.clientByID(username, function(err, client) {
+  function (username, password, done) {
+    clients.clientByID(username, function (err, client) {
       if (err) {
         return done(err);
       }
@@ -136,8 +136,8 @@ passport.use(new BasicStrategy(
 ));
 
 passport.use(new ClientPasswordStrategy(
-  function(clientID, clientSecret, done) {
-    clients.clientByID(clientID, function(err, client) {
+  function (clientID, clientSecret, done) {
+    clients.clientByID(clientID, function (err, client) {
       if (err) {
         return done(err);
       }
@@ -157,7 +157,7 @@ exports.authorization = [
     if (req.body !== {}) {
       req.body = req.query;
     }
-    if(req.body.redirect_uri !== undefined) {
+    if (req.body.redirect_uri !== undefined) {
       req.body.redirectURI = req.body.redirect_uri;
     }
     next();
@@ -206,7 +206,7 @@ exports.decision = [
 
 exports.token = [
   function (req, res, next) {
-    if(req.body && req.body.code) {
+    if (req.body && req.body.code) {
       req.body.access_token = req.body.code;
     }
     next();

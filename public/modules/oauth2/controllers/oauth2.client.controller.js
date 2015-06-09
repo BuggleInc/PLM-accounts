@@ -6,13 +6,13 @@ OAuth2.$inject = ['$scope', '$http'];
 
 function OAuth2($scope, $http) {
   var oauth2 = this;
-  
-  oauth2.client ={};
+
+  oauth2.client = {};
   oauth2.transactionID = '';
   oauth2.user = {};
-  
+
   init();
-  
+
   function init() {
     var urlParams = [
       'response_type=code',
@@ -21,13 +21,13 @@ function OAuth2($scope, $http) {
     ];
     var url = '/dialog/authorize?' + urlParams.join('&');
     $http.get(url)
-    .success(function (response) {
-      oauth2.client = response.client;
-      oauth2.transactionID = response.transactionID;
-      oauth2.user = response.user;
-    })
-    .error(function (response) {
-      console.log('error: ', response);
-    });
+      .success(function (response) {
+        oauth2.client = response.client;
+        oauth2.transactionID = response.transactionID;
+        oauth2.user = response.user;
+      })
+      .error(function (response) {
+        console.log('error: ', response);
+      });
   }
 }
