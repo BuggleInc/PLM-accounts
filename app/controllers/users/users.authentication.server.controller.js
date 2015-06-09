@@ -64,7 +64,7 @@ exports.signin = function (req, res, next) {
         } else {
           var path = '/';
           if(req.session.returnTo !== undefined) {
-            path = req.session.returnTo;
+            path = '/#!' + req.session.returnTo;
             delete req.session.returnTo;
           }
           res.json({

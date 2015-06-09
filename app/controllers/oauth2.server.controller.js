@@ -106,8 +106,11 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 
 exports.authorization = [
   function (req, res, next) {
-    if(req.body !== {}) {
+    if (req.body !== {}) {
       req.body = req.query;
+    }
+    if(req.body.redirect_uri !== undefined) {
+      req.body.redirectURI = req.body.redirect_uri;
     }
     next();
   },
@@ -125,7 +128,7 @@ exports.authorization = [
     });
   }),
   function (req, res) {
-    res.render('index', {
+    res.json({
       transactionID: req.oauth2.transactionID,
       user: req.user,
       client: req.oauth2.client
