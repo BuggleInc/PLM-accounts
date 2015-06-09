@@ -17,7 +17,7 @@ function OAuth2($scope, $http) {
     var urlParams = [
       'response_type=code',
       'client_id=5571b379afb1a0859de08ca3',
-      'redirectURI=http://localhost:9000'
+      'redirectURI=http://localhost:9000/'
     ];
     var url = '/dialog/authorize?' + urlParams.join('&');
     $http.get(url)

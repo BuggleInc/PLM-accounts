@@ -10,6 +10,8 @@ var authorizationCodes = require('./authorization-codes.server.controller'),
   _ = require('lodash'),
   oauth2orize = require('oauth2orize'),
   passport = require('passport'),
+  BasicStrategy = require('passport-http').BasicStrategy,
+  ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
   BearerStrategy = require('passport-http-bearer').Strategy,
   login = require('connect-ensure-login'),
   utils = require('../utils/uuid.server.utils');
@@ -23,7 +25,6 @@ exports.getUser = function (req, res) {
     });
   });
 };
-
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -93,14 +94,15 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     if (authCode === undefined) {
       return done(null, false);
     }
-	/*
-    if (client.id !== authCode.clientID) {
+
+    if (client._id.toString() !== authCode.clientID) {
       return done(null, false);
     }
-    if (redirectURI !== authCode.redirectURI) {
+
+    if (redirectURI !== client.redirectURI) {
       return done(null, false);
     }
-    */
+
     authorizationCodes.delete(code, function (err) {
       if (err) {
         return done(err);
@@ -116,25 +118,36 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   });
 }));
 
-passport.use(new BearerStrategy(
-  function (code, done) {
-    
-    authorizationCodes.find(code, function (err, authCode) {    
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    clients.clientByID(username, function(err, client) {
       if (err) {
         return done(err);
       }
-      if (authCode === undefined) {
+      if (!client) {
         return done(null, false);
       }
-/*
-      if (client.id !== authCode.clientID) {
+      if (client.clientSecret !== password) {
         return done(null, false);
       }
-      if (redirectURI !== authCode.redirectURI) {
+      return done(null, client);
+    });
+  }
+));
+
+passport.use(new ClientPasswordStrategy(
+  function(clientID, clientSecret, done) {
+    clients.clientByID(clientID, function(err, client) {
+      if (err) {
+        return done(err);
+      }
+      if (!client) {
         return done(null, false);
       }
-*/
-      done(null, authCode);
+      if (client.clientSecret !== clientSecret) {
+        return done(null, false);
+      }
+      return done(null, client);
     });
   }
 ));
@@ -198,7 +211,7 @@ exports.token = [
     }
     next();
   },
-  passport.authenticate(['bearer', 'oauth2-client-password'], {
+  passport.authenticate(['basic', 'oauth2-client-password'], {
     session: false
   }),
   server.token(),
