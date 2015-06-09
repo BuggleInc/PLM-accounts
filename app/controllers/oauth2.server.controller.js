@@ -153,15 +153,6 @@ passport.use(new ClientPasswordStrategy(
 ));
 
 exports.authorization = [
-  function (req, res, next) {
-    if (req.body !== {}) {
-      req.body = req.query;
-    }
-    if (req.body.redirect_uri !== undefined) {
-      req.body.redirectURI = req.body.redirect_uri;
-    }
-    next();
-  },
   login.ensureLoggedIn('/#!/signin'),
   server.authorization(function (clientID, redirectURI, done) {
     clients.clientByID(clientID, function (err, client) {
@@ -205,12 +196,6 @@ exports.decision = [
 // authenticate when making requests to this endpoint.
 
 exports.token = [
-  function (req, res, next) {
-    if (req.body && req.body.code) {
-      req.body.access_token = req.body.code;
-    }
-    next();
-  },
   passport.authenticate(['basic', 'oauth2-client-password'], {
     session: false
   }),
