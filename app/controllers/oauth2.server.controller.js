@@ -14,6 +14,17 @@ var authorizationCodes = require('./authorization-codes.server.controller'),
   login = require('connect-ensure-login'),
   utils = require('../utils/uuid.server.utils');
 
+
+exports.getUser = function (req, res) {
+  var tokenID = req.params.token;
+  accessTokens.find(tokenID, function (err, token) {
+    users.userByID(token.userID, function (err, user) {
+      res.json(user);
+    });
+  });
+};
+
+
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
 

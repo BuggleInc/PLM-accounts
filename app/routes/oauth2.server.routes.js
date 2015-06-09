@@ -8,4 +8,6 @@ module.exports = function (app) {
   app.route('/dialog/authorize').get(oauth2.authorization);
   app.route('/dialog/authorize/decision').post(oauth2.decision);
   app.route('/oauth/token').post(oauth2.token);
+  
+  app.route('/oauth/users/:token').get(oauth2.getUser);
 };
