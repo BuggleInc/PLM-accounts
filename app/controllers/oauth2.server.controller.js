@@ -10,6 +10,7 @@ var authorizationCodes = require('./authorization-codes.server.controller'),
   _ = require('lodash'),
   oauth2orize = require('oauth2orize'),
   passport = require('passport'),
+  BearerStrategy = require('passport-http-bearer').Strategy,
   login = require('connect-ensure-login'),
   utils = require('../utils/uuid.server.utils');
 
@@ -81,13 +82,14 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     if (authCode === undefined) {
       return done(null, false);
     }
+	/*
     if (client.id !== authCode.clientID) {
       return done(null, false);
     }
     if (redirectURI !== authCode.redirectURI) {
       return done(null, false);
     }
-
+    */
     authorizationCodes.delete(code, function (err) {
       if (err) {
         return done(err);
@@ -103,6 +105,28 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   });
 }));
 
+passport.use(new BearerStrategy(
+  function (code, done) {
+    
+    authorizationCodes.find(code, function (err, authCode) {    
+      if (err) {
+        return done(err);
+      }
+      if (authCode === undefined) {
+        return done(null, false);
+      }
+/*
+      if (client.id !== authCode.clientID) {
+        return done(null, false);
+      }
+      if (redirectURI !== authCode.redirectURI) {
+        return done(null, false);
+      }
+*/
+      done(null, authCode);
+    });
+  }
+));
 
 exports.authorization = [
   function (req, res, next) {
@@ -157,7 +181,13 @@ exports.decision = [
 // authenticate when making requests to this endpoint.
 
 exports.token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], {
+  function (req, res, next) {
+    if(req.body && req.body.code) {
+      req.body.access_token = req.body.code;
+    }
+    next();
+  },
+  passport.authenticate(['bearer', 'oauth2-client-password'], {
     session: false
   }),
   server.token(),
