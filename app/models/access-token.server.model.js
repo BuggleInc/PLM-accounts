@@ -21,6 +21,10 @@ var AccessTokenSchema = new Schema({
   clientID: {
     type: String,
     trim: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
   }
 });
 

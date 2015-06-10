@@ -22,19 +22,30 @@ exports.find = function (key, done) {
 };
 
 exports.save = function (token, userID, clientID, done) {
-  // Init Variables
-  var accessToken = new AccessToken({
-    key: token,
-    clientID: clientID,
-    userID: userID
-  });
-
-  // Then save the user 
-  accessToken.save(function (err) {
+  var newToken = {};
+  AccessToken.findOne({
+    userID: userID,
+    clientID: clientID
+  }).exec(function (err, existingToken) {
     if (err) {
-      done(err);
-    } else {
-      done(null);
+      return done(err);
     }
+    if (!existingToken) {
+      newToken = new AccessToken({
+        key: token,
+        clientID: clientID,
+        userID: userID
+      });
+    } else {
+      newToken = existingToken;
+      newToken.key = token;
+    }
+    newToken.save(function (err2) {
+      if (err2) {
+        done(err2);
+      } else {
+        done(null);
+      }
+    });
   });
 };
