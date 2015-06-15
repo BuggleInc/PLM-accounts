@@ -21,6 +21,21 @@ exports.find = function (key, done) {
   });
 };
 
+exports.findByIds = function (clientID, userID, done) {
+  AccessToken.findOne({
+    clientID: clientID,
+    userID: userID
+  }).exec(function (err, token) {
+    if (err) {
+      return done(err);
+    }
+    if (!token) {
+      return done(new Error('Failed to load AccessToken '));
+    }
+    done(null, token);
+  });
+};
+
 exports.save = function (token, userID, clientID, done) {
   var newToken = {};
   AccessToken.findOne({

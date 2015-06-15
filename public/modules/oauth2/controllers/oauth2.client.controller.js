@@ -36,6 +36,10 @@ function OAuth2($scope, $http, $stateParams, $location, Authentication) {
     var url = '/dialog/authorize?' + urlParams.join('&');
     $http.get(url)
       .success(function (response) {
+        if (response.code) {
+          // User already agreed to authorize the client to access his account
+          window.location.href = oauth2.redirectURI + '?code=' + response.code;
+        }
         oauth2.client = response.client;
         oauth2.transactionID = response.transactionID;
         oauth2.user = response.user;

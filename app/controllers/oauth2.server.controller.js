@@ -153,6 +153,26 @@ passport.use(new ClientPasswordStrategy(
 
 exports.authorization = [
   login.ensureLoggedIn('/#!/signin'),
+  function (req, res, next) {
+    var clientID = req.query.client_id;
+    var redirectURI = req.query.redirectURI;
+    var userID = req.user.id;
+    accessTokens.findByIds(clientID, userID, function (err, token) {
+      if (err || !token) {
+        next();
+      } else {
+        var code = utils.uid(16);
+        authorizationCodes.save(code, clientID, redirectURI, userID, function (err) {
+          if (err) {
+            next();
+          }
+          res.json({
+            code: code
+          });
+        });
+      }
+    });
+  },
   server.authorization(function (clientID, redirectURI, done) {
     clients.clientByID(clientID, function (err, client) {
       if (err) {
