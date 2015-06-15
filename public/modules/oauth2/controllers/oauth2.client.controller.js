@@ -2,10 +2,14 @@
 
 angular.module('oauth2').controller('OAuth2', OAuth2);
 
-OAuth2.$inject = ['$scope', '$http'];
+OAuth2.$inject = ['$scope', '$http', '$stateParams', '$location', 'Authentication'];
 
-function OAuth2($scope, $http) {
+function OAuth2($scope, $http, $stateParams, $location, Authentication) {
   var oauth2 = this;
+
+  oauth2.responseType = $stateParams.response_type;
+  oauth2.clientID = $stateParams.client_id;
+  oauth2.redirectURI = $stateParams.redirect_uri;
 
   oauth2.client = {};
   oauth2.transactionID = '';
@@ -15,10 +19,20 @@ function OAuth2($scope, $http) {
 
   function init() {
     var urlParams = [
-      'response_type=code',
-      'client_id=5571b379afb1a0859de08ca3',
-      'redirectURI=http://localhost:9000/'
+      'response_type=' + oauth2.responseType,
+      'client_id=' + oauth2.clientID,
+      'redirectURI=' + oauth2.redirectURI
     ];
+
+    if (!Authentication.user) {
+      localStorage.responseType = oauth2.responseType;
+      localStorage.clientID = oauth2.clientID;
+      localStorage.redirectURI = oauth2.redirectURI;
+      $location.path('/signin');
+    } else {
+      delete localStorage.redirectURI;
+    }
+
     var url = '/dialog/authorize?' + urlParams.join('&');
     $http.get(url)
       .success(function (response) {
