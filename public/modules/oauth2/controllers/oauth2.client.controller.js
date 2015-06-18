@@ -30,6 +30,8 @@ function OAuth2($scope, $http, $stateParams, $location, Authentication) {
       localStorage.redirectURI = oauth2.redirectURI;
       $location.path('/signin');
     } else {
+      delete localStorage.responseType;
+      delete localStorage.clientID;
       delete localStorage.redirectURI;
     }
 
