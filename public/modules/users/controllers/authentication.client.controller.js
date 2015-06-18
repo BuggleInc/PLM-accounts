@@ -13,9 +13,23 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
         $scope.authentication.user = response;
 
         // And redirect to the index page
-        $location.path('/');
+        if (localStorage.clientID && localStorage.redirectURI && localStorage.responseType) {
+          var clientID = localStorage.clientID;
+          var redirectURI = localStorage.redirectURI;
+          var responseType = localStorage.responseType;
+          delete localStorage.clientID;
+          delete localStorage.redirectURI;
+          delete localStorage.responseType;
+          $state.go('authorize', {
+            response_type: responseType,
+            client_id: clientID,
+            redirect_uri: redirectURI
+          });
+        } else {
+          $location.path('/');
+        }
       }).error(function (response) {
-        $scope.error = response.message;
+        $scope.error = response;
       });
     };
 

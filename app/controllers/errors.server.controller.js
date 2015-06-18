@@ -36,7 +36,7 @@ exports.getErrorMessage = function (err) {
     }
   } else {
     for (errName in err.errors) {
-      if (err.erros.hasOwnProperty(errName) && err.errors[errName].message) {
+      if (err.errors.hasOwnProperty(errName) && err.errors[errName].message) {
         message = err.errors[errName].message;
       }
 
