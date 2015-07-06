@@ -1,7 +1,7 @@
 {
-	"name": "mean",
+	"name": "plm-accounts",
 	"version": "0.0.1",
-	"description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
+	"description": "OAuth2 provider service based on MEAN.JS",
 	"dependencies": {
 		"bootstrap": "~3",
 		"angular": "~1.2",
