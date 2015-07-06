@@ -1,0 +1,14 @@
+accounts:
+  build: .
+  ports:
+    - "3000:3000"
+  links:
+    - db
+  environment: 
+    NODE_ENV: production
+db:
+  image: mongo
+  volumes:
+    - "~/mongodb/data:/data/db"
+  ports: 
+    - "27017:27017"
