@@ -178,7 +178,7 @@ exports.authorization = [
       if (err) {
         return done(err);
       }
-      if (redirectURI !== client.redirectURI) {
+      if (!client || (redirectURI !== client.redirectURI)) {
         return done(null, false);
       }
 
