@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 
 exports.clientByID = function (id, next) {
   Client.findOne({
-    _id: id
+    clientID: id
   }).exec(function (err, client) {
     next(err, client);
   });
