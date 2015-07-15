@@ -4,6 +4,9 @@ MAINTAINER Matthieu Nicolas, matthieu.nicolas@inria.fr
 
 WORKDIR /app
 
+# Required for PhantomJS
+RUN apt-get install -y bzip2
+
 # Install Mean.JS Prerequisites
 RUN npm install -g grunt-cli
 RUN npm install -g bower
