@@ -14,6 +14,10 @@ var ClientSchema = new Schema({
     type: String,
     trim: true
   },
+  clientName: {
+    type: String,
+    trim: true
+  },
   clientSecret: {
     type: String,
     trim: true
