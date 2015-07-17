@@ -21,7 +21,8 @@ function OAuth2($scope, $http, $stateParams, $location, Authentication) {
     var urlParams = [
       'response_type=' + oauth2.responseType,
       'client_id=' + oauth2.clientID,
-      'redirectURI=' + oauth2.redirectURI
+      'redirectURI=' + oauth2.redirectURI,
+      'redirect_uri=' + oauth2.redirectURI
     ];
 
     if (!Authentication.user) {

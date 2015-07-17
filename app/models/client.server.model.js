@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
  * Client Schema
  */
 var ClientSchema = new Schema({
-  clientId: {
+  clientID: {
     type: String,
     trim: true
   },

@@ -7,9 +7,17 @@ var mongoose = require('mongoose'),
   _ = require('lodash'),
   Client = mongoose.model('Client');
 
-exports.clientByID = function (id, next) {
+exports.clientByPrivateID = function (id, next) {
   Client.findOne({
-    clientID: id
+    _id: id
+  }).exec(function (err, client) {
+    next(err, client);
+  });
+};
+
+exports.clientByID = function (clientID, next) {
+  Client.findOne({
+    clientID: clientID
   }).exec(function (err, client) {
     next(err, client);
   });

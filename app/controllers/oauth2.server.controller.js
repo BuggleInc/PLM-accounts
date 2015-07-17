@@ -46,7 +46,7 @@ server.serializeClient(function (client, done) {
 });
 
 server.deserializeClient(function (id, done) {
-  clients.clientByID(id, function (err, client) {
+  clients.clientByPrivateID(id, function (err, client) {
     if (err) {
       return done(err);
     }
@@ -71,7 +71,7 @@ server.deserializeClient(function (id, done) {
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
   var code = utils.uid(16);
 
-  authorizationCodes.save(code, client.id, redirectURI, user.id, function (err) {
+  authorizationCodes.save(code, client.clientID, redirectURI, user.id, function (err) {
     if (err) {
       return done(err);
     }
@@ -86,6 +86,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
 // code.
 
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
+  console.log('dans exchange, client: ', client);
   authorizationCodes.find(code, function (err, authCode) {
     if (err) {
       return done(err);
@@ -94,7 +95,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(null, false);
     }
 
-    if (client._id.toString() !== authCode.clientID) {
+    if (client.clientID !== authCode.clientID) {
       return done(null, false);
     }
 
