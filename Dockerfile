@@ -1,29 +1,30 @@
-FROM node:latest
+FROM node:0.12
 
-MAINTAINER Matthieu Nicolas, matthieu.nicolas@inria.fr
+# Install gem sass for  grunt-contrib-sass
+RUN apt-get update -qq && apt-get install -y build-essential
+RUN apt-get install -y ruby
+RUN gem install sass
 
-WORKDIR /app
-
-# Required for PhantomJS
-RUN apt-get install -y bzip2
+WORKDIR /home/mean
 
 # Install Mean.JS Prerequisites
 RUN npm install -g grunt-cli
 RUN npm install -g bower
 
 # Install Mean.JS packages
-ADD package.json /app/package.json
+ADD package.json /home/mean/package.json
 RUN npm install
 
 # Manually trigger bower. Why doesnt this work via npm install?
-ADD .bowerrc /app/.bowerrc
-ADD bower.json /app/bower.json
+ADD .bowerrc /home/mean/.bowerrc
+ADD bower.json /home/mean/bower.json
 RUN bower install --config.interactive=false --allow-root
 
 # Make everything available for start
-ADD . /app
+ADD . /home/mean
 
-ENV NODE_ENV production
+# Set development environment as default
+ENV NODE_ENV development
 
 # Port 3000 for server
 # Port 35729 for livereload
