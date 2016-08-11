@@ -1,14 +1,14 @@
 {
-  "name": "meanjs",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
-  "version": "0.4.2",
+  "name": "PLM-accounts",
+  "description": "OAuth2 provider service based on MEAN.JS",
+  "version": "2.0-alpha",
   "meanjs-version": "0.4.2",
   "private": false,
-  "author": "https://github.com/meanjs/mean/graphs/contributors",
+  "author": "https://github.com/buggleinc/plm-accounts/graphs/contributors",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/meanjs/mean.git"
+    "url": "https://github.com/buggleinc/plm-accounts.git"
   },
   "engines": {
     "node": ">=0.10.28",
