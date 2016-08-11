@@ -60,6 +60,41 @@ exports.signin = function (req, res, next) {
     if (err || !user) {
       res.status(400).send(info);
     } else {
+      if(user.hashVersion !== User.CURRENT_HASH_VERSION) {
+        updatePassword(user, req, res);
+      }
+      else {
+        // Remove sensitive data before login
+        user.password = undefined;
+        user.salt = undefined;
+
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      }
+    }
+  })(req, res, next);
+};
+
+/**
+ * Update the user's salt and hashed password
+ * This is due to a previous issue with how the salt was stored in the database and also the change of default encoding for Buffer.
+ * Its leads the hash function to generate different results according to the running version of Node.
+ * So we want to update the user's stored salt and password when she logs again.
+ */
+function updatePassword (user, req, res) {
+  user.password = req.body.password;
+
+  user.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
@@ -72,8 +107,8 @@ exports.signin = function (req, res, next) {
         }
       });
     }
-  })(req, res, next);
-};
+  });
+}
 
 /**
  * Signout
