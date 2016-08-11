@@ -97,14 +97,21 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  hashVersion: {
+    type: Number
   }
 });
+
+var CURRENT_HASH_VERSION = 1;
+UserSchema.statics.CURRENT_HASH_VERSION = CURRENT_HASH_VERSION;
 
 /**
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
+    this.hashVersion = CURRENT_HASH_VERSION;
     this.salt = crypto.randomBytes(16).toString('base64');
     this.password = this.hashPassword(this.password);
   }
@@ -132,7 +139,19 @@ UserSchema.pre('validate', function (next) {
  */
 UserSchema.methods.hashPassword = function (password) {
   if (this.salt && password) {
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+    return crypto.pbkdf2Sync(new Buffer(password, 'utf8'), new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+  } else {
+    return password;
+  }
+};
+
+/**
+ * Create instance method for hashing a password
+ * Originally from MEAN.JS v0.3, we updated it to keep the previous behavior regardless the version of Node we are using.
+ */
+UserSchema.methods.oldHashPassword = function (password) {
+  if (this.salt && password) {
+    return crypto.pbkdf2Sync(new Buffer(password, 'ascii'), new Buffer(this.salt, 'ascii'), 10000, 64).toString('base64');
   } else {
     return password;
   }
@@ -142,7 +161,12 @@ UserSchema.methods.hashPassword = function (password) {
  * Create instance method for authenticating user
  */
 UserSchema.methods.authenticate = function (password) {
-  return this.password === this.hashPassword(password);
+  if(this.hashVersion === CURRENT_HASH_VERSION) {
+    return this.password === this.hashPassword(password);
+  } else {
+    return this.password === this.oldHashPassword(password);
+  }
+
 };
 
 /**
@@ -177,7 +201,7 @@ UserSchema.statics.generateRandomPassphrase = function () {
     var password = '';
     var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
 
-    // iterate until the we have a valid passphrase. 
+    // iterate until the we have a valid passphrase.
     // NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present.
     while (password.length < 20 || repeatingCharacters.test(password)) {
       // build the random password
