@@ -4,7 +4,7 @@ module.exports = {
   app: {
     title: 'PLM-accounts',
     description: 'OAuth2 provider service based on MEAN.JS',
-    keywords: 'MEAN.JS, oauth2orize, OAuth2'
+    keywords: 'MEAN.JS, oauth2orize, OAuth2',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   port: process.env.PORT || 3000,
