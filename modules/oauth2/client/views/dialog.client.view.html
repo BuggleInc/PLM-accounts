@@ -1,0 +1,18 @@
+<section>
+  <div class="page-header">
+    <h1>Authorization</h1>
+  </div>
+  <div>
+    <p>Hi {{ oauth2.user.displayName }}!</p>
+    <p><strong>{{ oauth2.clientID }}</strong> is requesting access to your account.</p>
+    <p>Do you approve?</p>
+
+    <form method="post" action="/oauth2/decision">
+      <input name="transaction_id" type="hidden" ng-value="oauth2.transactionID">
+      <div>
+        <input type="submit"  value="Allow">
+        <input type="submit" name="cancel" value="Deny">
+      </div>
+    </form>
+  </div>
+</section>
