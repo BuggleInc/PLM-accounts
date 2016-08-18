@@ -40,10 +40,10 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
 
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-    if( (fromState.name !== 'authentication.signin' || toState.name !== 'authentication.signup') &&
-      (fromState.name !== 'authentication.signup' || toState.name !== 'authentication.signin') ) {
+    if((fromState.name !== 'authentication.signin' || toState.name !== 'authentication.signup') &&
+      (fromState.name !== 'authentication.signup' || toState.name !== 'authentication.signin')) {
       // The user may switch between sign-in and sign-up before been successfully authenticated
-      // Then we want to redirect him to the page he tried to access, not sign-in or sign-up again 
+      // Then we want to redirect him to the page he tried to access, not sign-in or sign-up again
       storePreviousState(fromState, fromParams);
     }
   });
