@@ -1,0 +1,20 @@
+<section ng-controller="ClientsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Clients</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="client in clients" ui-sref="clients.view({id: client._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="client.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="client.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="client.clientName"></h4>
+      <p class="list-group-item-text" ng-bind="client.redirectURI"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="clients.$resolved && !clients.length">
+    No clients yet, why don't you <a ui-sref="clients.create">create one</a>?
+  </div>
+</section>

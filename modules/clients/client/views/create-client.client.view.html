@@ -1,0 +1,31 @@
+<section ng-controller="ClientsController">
+  <div class="page-header">
+    <h1>New Client</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="clientForm" class="form-horizontal" ng-submit="create(clientForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="clientName">Name</label>
+          <input name="clientName" type="text" ng-model="clientName" id="clientName" class="form-control" placeholder="Name" required>
+          <div ng-messages="clientForm.clientName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Client name is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="redirectURI">Redirect URI</label>
+          <input name="redirectURI" type="text" ng-model="redirectURI" id="redirectURI" class="form-control" placeholder="RedirectURI" required>
+          <div ng-messages="clientForm.redirectURI.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">A redirectURI is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
