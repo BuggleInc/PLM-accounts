@@ -10,6 +10,16 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
+ * Check if user is authenticated
+ */
+exports.ensureLoggedIn = function (req, res, next) {
+  if (!req.user) {
+    res.sendStatus(500);
+  }
+  next();
+};
+
+/**
  * Create a client
  */
 exports.create = function (req, res) {
@@ -24,9 +34,8 @@ exports.create = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(client);
     }
+    res.json(client);
   });
 };
 
@@ -51,9 +60,8 @@ exports.update = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(client);
     }
+    res.json(client);
   });
 };
 
@@ -68,9 +76,8 @@ exports.delete = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(client);
     }
+    res.json(client);
   });
 };
 
@@ -78,15 +85,14 @@ exports.delete = function (req, res) {
  * List of Clients
  */
 exports.list = function (req, res) {
-  console.log('req.user: ', req.user);
   Client.find({ user: req.user._id }).sort('-created').populate('user', 'displayName').exec(function (err, clients) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(clients);
     }
+    console.log('clients: ', clients);
+    res.json(clients);
   });
 };
 
@@ -94,6 +100,7 @@ exports.list = function (req, res) {
  * Client middleware
  */
 exports.clientByID = function (req, res, next, id) {
+  var searchQuery;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
@@ -101,10 +108,16 @@ exports.clientByID = function (req, res, next, id) {
     });
   }
 
-  Client.findById(id).populate('user', 'displayName').exec(function (err, client) {
+  searchQuery = {
+    _id: id,
+    user: req.user
+  };
+
+  Client.findOne(searchQuery).populate('user', 'displayName').exec(function (err, client) {
     if (err) {
       return next(err);
-    } else if (!client) {
+    }
+    if (!client) {
       return res.status(404).send({
         message: 'No client with that identifier has been found'
       });

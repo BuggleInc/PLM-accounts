@@ -12,7 +12,10 @@ angular.module('clients').config(['$stateProvider',
       })
       .state('clients.list', {
         url: '',
-        templateUrl: 'modules/clients/client/views/list-clients.client.view.html'
+        templateUrl: 'modules/clients/client/views/list-clients.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('clients.create', {
         url: '/create',
@@ -22,11 +25,14 @@ angular.module('clients').config(['$stateProvider',
         }
       })
       .state('clients.view', {
-        url: '/:clientId',
-        templateUrl: 'modules/clients/client/views/view-client.client.view.html'
+        url: '/:id',
+        templateUrl: 'modules/clients/client/views/view-client.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('clients.edit', {
-        url: '/:clientId/edit',
+        url: '/:id/edit',
         templateUrl: 'modules/clients/client/views/edit-client.client.view.html',
         data: {
           roles: ['user', 'admin']

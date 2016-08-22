@@ -77,7 +77,15 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
     // Find existing Client
     $scope.findOne = function () {
       $scope.client = Clients.get({
-        clientId: $stateParams.clientId
+        id: $stateParams.id
+      });
+      $scope.client.$promise.then(function(data) {
+        // Do nothing
+      }, function(error) {
+        if(error.status === 404) {
+          // No existing client for this ID
+          $location.path('clients');
+        }
       });
     };
   }

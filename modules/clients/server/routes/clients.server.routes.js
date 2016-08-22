@@ -17,6 +17,9 @@ module.exports = function (app) {
     .put(clients.update)
     .delete(clients.delete);
 
+  // Check if user is authenticated
+  app.use('/api/clients', clients.ensureLoggedIn);
+
   // Finish by binding the client middleware
   app.param('id', clients.clientByID);
 };
