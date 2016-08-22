@@ -1,8 +1,8 @@
 'use strict';
 
 // Clients controller
-angular.module('clients').controller('ClientsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Clients',
-  function ($scope, $stateParams, $location, Authentication, Clients) {
+angular.module('clients').controller('ClientsController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Clients',
+  function ($scope, $stateParams, $location, $http, Authentication, Clients) {
     $scope.authentication = Authentication;
 
     // Create new Client
@@ -67,6 +67,21 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
+    };
+
+    // Regenerate secret of existing Client
+    $scope.regenerateSecret = function () {
+      $scope.error = null;
+
+      var client = $scope.client;
+      var url = 'api/clients/' + client._id + '/regenerateSecret';
+
+      $http.put(url)
+        .then(function () {
+          $location.path('clients/' + client._id);
+        }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+        });
     };
 
     // Find a list of Clients

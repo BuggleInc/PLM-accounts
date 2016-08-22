@@ -17,6 +17,10 @@ module.exports = function (app) {
     .put(clients.update)
     .delete(clients.delete);
 
+  // Single client route to regenerate its secret
+  app.route('/api/clients/:id/regenerateSecret')
+    .put(clients.regenerateSecret);
+
   // Check if user is authenticated
   app.use('/api/clients', clients.ensureLoggedIn);
 

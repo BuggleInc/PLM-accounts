@@ -65,6 +65,21 @@ exports.update = function (req, res) {
   });
 };
 
+exports.regenerateSecret = function (req, res) {
+  var client = req.client;
+
+  client.clientSecret = uuid.v4();
+
+  client.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    res.json(client);
+  });
+};
+
 /**
  * Delete an client
  */
@@ -91,7 +106,6 @@ exports.list = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     }
-    console.log('clients: ', clients);
     res.json(clients);
   });
 };
