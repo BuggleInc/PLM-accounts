@@ -148,7 +148,8 @@ exports.authorization = [
   }),
   function (req, res) {
     res.json({
-      transactionID: req.oauth2.transactionID
+      transactionID: req.oauth2.transactionID,
+      clientName: req.oauth2.client.clientName
     });
   }
 ];

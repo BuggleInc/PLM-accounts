@@ -3,16 +3,28 @@
     <h1>Authorization</h1>
   </div>
   <div>
-    <p>Hi {{ oauth2.user.displayName }}!</p>
-    <p><strong>{{ oauth2.clientID }}</strong> is requesting access to your account.</p>
+
+    <div class="alert alert-danger" role="alert" ng-if="oauth2.error">
+      <span ng-bind="oauth2.errorMsg"></span>
+      <ul>
+        <li ng-repeat="missingParameter in oauth2.missingParameters">
+          <span ng-bind="missingParameter"></span>
+        </li>
+      </ul>
+    </div>
+
+    <p>Hi <strong>{{ oauth2.user.displayName || 'me' }}</strong>!</p>
+    <p><strong>{{ oauth2.clientName || 'An undefined client application'}}</strong> is requesting access to your account.</p>
     <p>Do you approve?</p>
 
     <form method="post" action="/oauth2/decision">
       <input name="transaction_id" type="hidden" ng-value="oauth2.transactionID">
       <div>
-        <input type="submit"  value="Allow">
-        <input type="submit" name="cancel" value="Deny">
+        <input class="btn btn-primary" type="submit" value="Allow" ng-disabled="oauth2.error">
+        <input class="btn btn-default" type="submit" value="Deny" name="cancel" ng-disabled="oauth2.error">
       </div>
     </form>
+    <div
+
   </div>
 </section>
