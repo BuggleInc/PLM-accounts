@@ -10,11 +10,22 @@
       <i class="glyphicon glyphicon-trash"></i>
     </a>
   </div>
+  <div>
+    <label for="redirectURI">Redirect URI</label>
+    <span ng-bind="client.redirectURI" id="redirectURI">
+  </div>
+  <div>
+    <label for="clientID">Client ID</label>
+    <span ng-bind="client.clientID" id="clientID">
+  </div>
+  <div>
+    <label for="clientSecret">Client Secret</label>
+    <span ng-bind="client.clientSecret" id="clientSecret">
+  </div>
   <small>
     <em class="text-muted">
       Created on
       <span ng-bind="client.created | date:'mediumDate'"></span>
     </em>
   </small>
-  <p class="lead" ng-bind="client.redirectURI"></p>
 </section>

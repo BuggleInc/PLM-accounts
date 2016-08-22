@@ -19,6 +19,23 @@
             <p class="help-block error-text" ng-message="required">A redirectURI is required.</p>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="clientID">Client ID</label>
+              <span ng-bind="client.clientID" id="clientID">
+            </div>
+            <div class="form-group">
+              <label for="clientSecret">Client Secret</label>
+              <span ng-bind="client.clientSecret" id="clientSecret">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="button" value="Regenerate secret" ng-click="regenerateSecret()" class="btn btn-default">
+            </div>
+          </div>
+        </div>
         <div class="form-group">
           <input type="submit" value="Update" class="btn btn-default">
         </div>

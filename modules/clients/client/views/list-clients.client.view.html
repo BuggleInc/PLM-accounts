@@ -4,12 +4,24 @@
   </div>
   <div class="list-group">
     <a ng-repeat="client in clients" ui-sref="clients.view({id: client._id})" class="list-group-item">
-      <small class="list-group-item-text">
-        Created on
-        <span ng-bind="client.created | date:'mediumDate'"></span>
+      <div>
+        <label for="redirectURI">Redirect URI</label>
+        <span ng-bind="client.redirectURI" id="redirectURI">
+      </div>
+      <div>
+        <label for="clientID">Client ID</label>
+        <span ng-bind="client.clientID" id="clientID">
+      </div>
+      <div>
+        <label for="clientSecret">Client Secret</label>
+        <span ng-bind="client.clientSecret" id="clientSecret">
+      </div>
+      <small>
+        <em class="text-muted">
+          Created on
+          <span ng-bind="client.created | date:'mediumDate'"></span>
+        </em>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="client.clientName"></h4>
-      <p class="list-group-item-text" ng-bind="client.redirectURI"></p>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="clients.$resolved && !clients.length">
