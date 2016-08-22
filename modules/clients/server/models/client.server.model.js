@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Client Schema
  */
 var ClientSchema = new Schema({
+  created: {
+    type: Date,
+    default: Date.now
+  },
   clientID: {
     type: String,
     trim: true
