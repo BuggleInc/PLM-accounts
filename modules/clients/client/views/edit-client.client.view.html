@@ -7,18 +7,18 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label for="clientName">Name</label>
-          <input name="clientName" type="text" ng-model="clientName" id="clientName" class="form-control" placeholder="Name" required>
+          <input name="clientName" type="text" ng-model="client.clientName" id="clientName" class="form-control" placeholder="Name" required>
           <div ng-messages="clientForm.clientName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Client name is required.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
           <label for="redirectURI">Redirect URI</label>
-          <input name="redirectURI" type="text" ng-model="redirectURI" id="redirectURI" class="form-control" placeholder="RedirectURI" required>
+          <input name="redirectURI" type="text" ng-model="client.redirectURI" id="redirectURI" class="form-control" placeholder="RedirectURI" required>
           <div ng-messages="clientForm.redirectURI.$error" role="alert">
             <p class="help-block error-text" ng-message="required">A redirectURI is required.</p>
           </div>
-        </div>>
+        </div>
         <div class="form-group">
           <input type="submit" value="Update" class="btn btn-default">
         </div>

@@ -3,7 +3,7 @@
     <h1 ng-bind="client.clientName"></h1>
   </div>
   <div class="pull-right" ng-show="authentication.user._id == client.user._id">
-    <a class="btn btn-primary" ui-sref="clients.edit({clientId: client._id})">
+    <a class="btn btn-primary" ui-sref="clients.edit({id: client._id})">
       <i class="glyphicon glyphicon-edit"></i>
     </a>
     <a class="btn btn-primary" ng-click="remove();">
@@ -12,10 +12,8 @@
   </div>
   <small>
     <em class="text-muted">
-      Posted on
+      Created on
       <span ng-bind="client.created | date:'mediumDate'"></span>
-      by
-      <span ng-bind="client.user.displayName"></span>
     </em>
   </small>
   <p class="lead" ng-bind="client.redirectURI"></p>
