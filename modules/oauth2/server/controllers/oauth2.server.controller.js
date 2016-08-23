@@ -9,6 +9,7 @@ var path = require('path'),
   oauth2orize = require('oauth2orize'),
   uuid = require('uuid'),
   AccessToken = mongoose.model('AccessToken'),
+  AuthorizedApplication = mongoose.model('AuthorizedApplication'),
   AuthorizationCode = mongoose.model('AuthorizationCode'),
   Client = mongoose.model('Client'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
@@ -75,7 +76,18 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
     if (err) {
       done(err);
     } else {
-      done(null, code);
+      var authorizedApp = new AuthorizedApplication({
+        'user': user,
+        'client': client
+      });
+
+      authorizedApp.save(function (err) {
+        if (err) {
+          done(err);
+        } else {
+          done(null, code);
+        }
+      });
     }
   });
 }));
@@ -146,6 +158,49 @@ exports.authorization = [
       }
     });
   }),
+  function (req, res, next) {
+    var
+      authCode,
+      client,
+      code,
+      searchQuery,
+      user;
+
+    client = req.oauth2.client;
+    user = req.user;
+
+    searchQuery = {
+      user: user,
+      client: client
+    };
+    AuthorizedApplication.findOne(searchQuery, function (err, authorizedApp) {
+      if(err) {
+        res.sendStatus(500);
+      }
+      if(!authorizedApp) {
+        next();
+      } else {
+        code = uuid.v4();
+
+        authCode = new AuthorizationCode({
+          'code': code,
+          'clientID': client.clientID,
+          'redirectURI': client.redirectURI,
+          'userID': user.id
+        });
+
+        authCode.save(function (err) {
+          if (err) {
+            res.sendStatus(500);
+          } else {
+            res.json({
+              code: code
+            });
+          }
+        });
+      }
+    });
+  },
   function (req, res) {
     res.json({
       transactionID: req.oauth2.transactionID,
@@ -191,7 +246,7 @@ exports.getUser = [
   passport.authenticate('bearer', { session: false }),
   function(req, res) {
     // We want to update the avatar URL for other domains
-    req.user.profileImageURL = req.headers.host + req.user.profileImageURL;
+    req.user.profileImageURL = req.headers.host + '/' + req.user.profileImageURL;
     res.json(req.user);
   }
 ];

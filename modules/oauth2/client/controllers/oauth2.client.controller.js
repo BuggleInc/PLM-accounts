@@ -2,9 +2,9 @@
 
 angular.module('oauth2').controller('OAuth2Controller', OAuth2);
 
-OAuth2.$inject = ['$http', '$window', '$location', '$stateParams', 'Authentication'];
+OAuth2.$inject = ['$http', '$window', '$stateParams', 'Authentication'];
 
-function OAuth2($http, $window, $location, $stateParams, Authentication) {
+function OAuth2($http, $window, $stateParams, Authentication) {
   var oauth2 = this;
 
   oauth2.error = false;
@@ -42,7 +42,9 @@ function OAuth2($http, $window, $location, $stateParams, Authentication) {
       clientID: oauth2.clientID,
       redirectURI: oauth2.redirectURI
     }).success(function (data, status) {
-      // TODO: redirect if already code
+      if(data.code) {
+        $window.location.href = oauth2.redirectURI + '?code=' + data.code;
+      }
       oauth2.transactionID = data.transactionID;
       oauth2.clientName = data.clientName;
     }).error(function (data, status) {
