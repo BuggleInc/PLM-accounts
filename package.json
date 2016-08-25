@@ -5,7 +5,7 @@
   "meanjs-version": "0.4.2",
   "private": false,
   "author": "https://github.com/buggleinc/plm-accounts/graphs/contributors",
-  "license": "MIT",
+  "license": "AGPLv3",
   "repository": {
     "type": "git",
     "url": "https://github.com/buggleinc/plm-accounts.git"
