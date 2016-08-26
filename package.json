@@ -1,7 +1,7 @@
 {
   "name": "PLM-accounts",
   "description": "OAuth2 provider service based on MEAN.JS",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0-rc2",
   "meanjs-version": "0.4.2",
   "private": false,
   "author": "https://github.com/buggleinc/plm-accounts/graphs/contributors",
